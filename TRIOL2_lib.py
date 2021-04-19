@@ -54,8 +54,10 @@ class Product(Triol):
 
     def __init__(self, item):
         self.id_item = item
-        self.name, self.description = self.get_info_db()
-        self.image = self.get_image_db()
+        data_db = self.get_info_db()
+        self.name, self.description = data_db if data_db else ['Товар не найден'] * 2
+        data_image = self.get_image_db()
+        self.image = data_image if data_image else None
 
     def get_info_db(self):
         # Ищет информацию в БД
@@ -66,14 +68,20 @@ class Product(Triol):
         try:
             out = cursor.fetchall()[0]
         except IndexError:
-            return 'Описание товара не найдено'
+            return None
 
         return out
-
     def get_image_db(self):
         # ищет фото торава по id
         con = sqlite3.connect(DataBase)
         cursor = con.cursor()
 
         cursor.execute('SELECT Image FROM Image WHERE item_number =' + self.id_item)
-        return cursor.fetchone()
+        try:
+            out = cursor.fetchone()
+        except IndexError:
+            return None
+
+        return out
+
+
