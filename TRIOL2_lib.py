@@ -55,7 +55,7 @@ class Product(Triol):
     def __init__(self, item):
         self.id_item = item
         data_db = self.get_info_db()
-        self.name, self.description = data_db if data_db else ['Товар не найден'] * 2
+        self.name, self.description = data_db if data_db else [None] * 2
         data_image = self.get_image_db()
         self.image = data_image if data_image else None
 
@@ -71,6 +71,8 @@ class Product(Triol):
             return None
 
         return out
+
+
     def get_image_db(self):
         # ищет фото торава по id
         con = sqlite3.connect(DataBase)
